@@ -1,6 +1,17 @@
 // tslint:disable: no-redundant-jsdoc
 export class KatexOptions {
     /**
+     * A list of delimiters to look for math
+     *
+     * @default [
+     *   {left: "$$", right: "$$", display: true},
+     *   {left: "\\(", right: "\\)", display: false},
+     *   {left: "\\[", right: "\\]", display: true}
+     * ]
+     */
+
+    delimiters?: ReadonlyArray<RenderMathInElementSpecificOptionsDelimiters> | undefined;
+    /**
      * If `true`, math will be rendered in display mode
      * (math in display style and center math on page)
      *
@@ -77,4 +88,19 @@ export class KatexOptions {
      * @default "warn"
      */
     strict?: boolean | string | Function;
+}
+
+export interface RenderMathInElementSpecificOptionsDelimiters {
+    /**
+     * A string which starts the math expression (i.e. the left delimiter)
+     */
+    left: string;
+    /**
+     * A string which ends the math expression (i.e. the right delimiter)
+     */
+    right: string;
+    /**
+     * A boolean of whether the math in the expression should be rendered in display mode or not
+     */
+    display: boolean
 }

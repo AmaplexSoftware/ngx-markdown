@@ -14,9 +14,8 @@ declare var joypixels: {
   shortnameToUnicode(input: string): string;
 };
 
-declare var katex: {
-  renderToString(tex: string, options?: KatexOptions): string;
-};
+declare let katex: unknown;
+declare function renderMathInElement(elem: HTMLElement, options?: KatexOptions): void;
 
 declare var Prism: {
   highlightAllUnder: (element: Element | Document) => void;
@@ -87,11 +86,20 @@ export class MarkdownService {
     }
   }
 
-  renderKatex(html: string, options?: KatexOptions): string {
-    if (typeof katex === 'undefined' || typeof katex.renderToString === 'undefined') {
+  renderKatex(element: HTMLElement, options?: KatexOptions): void {
+    if (typeof katex === 'undefined' || typeof renderMathInElement === 'undefined') {
       throw new Error(errorKatexNotLoaded);
     }
-    return html.replace(/\$([^\s][^$]*?[^\s])\$/gm, (_, tex) => katex.renderToString(tex, options));
+    renderMathInElement(element, {
+      ...options,
+      delimiters: [
+        { left: "$$", right: "$$", display: true },
+        { left: "$", right: "$", display: false },
+        { left: "\\(", right: "\\)", display: false },
+        { left: "\\[", right: "\\]", display: true },
+        { left: "{% katex %}", right: "{% endkatex %}", display: true },
+      ],
+    });
   }
 
   private decodeHtml(html: string): string {

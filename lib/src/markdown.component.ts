@@ -77,8 +77,12 @@ export class MarkdownComponent implements OnChanges, AfterViewInit {
 
   render(markdown: string, decodeHtml = false) {
     let compiled = this.markdownService.compile(markdown, decodeHtml, this.emoji);
-    compiled = this.katex ? this.markdownService.renderKatex(compiled, this.katexOptions) : compiled;
     this.element.nativeElement.innerHTML = compiled;
+
+    if (this.katex) {
+      this.markdownService.renderKatex(this.element.nativeElement, this.katexOptions);
+    }
+
     this.handlePlugins();
     this.markdownService.highlight(this.element.nativeElement);
     this.ready.emit();
